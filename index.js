@@ -95,6 +95,7 @@ renderHeader(headerList,thead) //függvény segítségével a fejlécet renderel
  */
 const tableBody = document.createElement('tbody') //táblázattörzs elem létrehozás,tárolás
 table.appendChild(tableBody) //táblázathoz hozzáfűzzük a törzset
+tableBody.id = 'jstbody' //js táblázat azonosítójának megadása
 renderTable(dataArray,tableBody) //függvény segítségével rendereljük a táblázat maradék részét(a törzsét)
 /**
  * @type {HTMLSelectElement} tableselector, select elem
@@ -116,4 +117,139 @@ const jsForm = document.createElement('form') //form létrehozása
 sectionDiv.appendChild(jsForm) //fűzés a divhez
 jsForm.id = 'jsform' //azonosító megadása
 renderForm(formArray,jsForm) //függvény segítségével rendereljük a form belsejét
+
+/**
+ * @type {HTMLFormElement} form 
+ */
+const htmlForm = document.querySelector('#htmlform') //html formjának lekérése azonosító alapján
+htmlForm.addEventListener('submit',function(e){ //htmlform-re eventlistener hozzáadása a submit-ra
+    e.preventDefault() // az oldal alapértelmezett működését preventeli
+    /**
+     * @type {HTMLFormElement} eventlistener targetje
+     */
+    const target = e.target //eventlistener targetjét betesszük változóba
+    /**
+     * @type {HTMLInputElement} bemenet
+     */
+    const mufajInput = target.querySelector('#elso') //első bemenet lekérése azonosító alapján
+        /**
+     * @type {HTMLInputElement} bemenet
+     */
+    const elsoSzerzoInput = target.querySelector('#masodik') //második bemenet lekérése azonosító alapján
+        /**
+     * @type {HTMLInputElement} bemenet
+     */
+    const elsoMuInput = target.querySelector('#harmadik') //harmadik bemenet lekérése azonosító alapján
+        /**
+     * @type {HTMLInputElement} bemenet
+     */
+    const masSzerzoInput = target.querySelector('#negyedik') //negyedik bemenet lekérése azonosító alapján
+        /**
+     * @type {HTMLInputElement} bemenet
+     */
+    const masMuInput = target.querySelector('#otodik') //ötödik bemenet lekérése azonosító alapján
+
+    if(validateFields(mufajInput,elsoSzerzoInput,elsoMuInput,htmlForm)) //megnézzük hogy bármelyik szükséges bemenet üres-e függvény segítségével
+    {
+    /**
+    *  @type {string} műfaj értéke
+    */
+    const mufajValue = mufajInput.value //első bemenet értéke
+    /**
+    *  @type {string} első szerző értéke
+    */
+    const elsoSzerzoValue = elsoSzerzoInput.value //második bemenet értéke
+    /**
+    *  @type {string} első mű értéke
+    */
+    const elsoMuValue = elsoMuInput.value //harmadik bemenet értéke
+    /**
+    *  @type {string} második szerző értéke
+    */
+    const masSzerzoValue = masSzerzoInput.value //negyedik bemenet értéke
+    /**
+    *  @type {string} második mű értéke
+    */
+    const masMuValue = masMuInput.value //ötödik bemenet értéke
+
+    /**
+     * @type {Author} új object
+     */
+    const newObj = {} //üres object deklarálása
+    newObj.genre = mufajValue //object műfaj értékének megadása
+    newObj.author = elsoSzerzoValue //object szerző értékének megadása
+    newObj.firstcreation = elsoMuValue //object első mű értékének megadása
+    newObj.secAuthor = masSzerzoValue //object második szerző értékének megadása
+    newObj.secCreation = masMuValue //object második mű értékének megadása
+
+    /**
+     * @type {HTMLTableSectionElement} táblázat törzs
+     */
+    const htmlTBody = document.querySelector('#htmltbody') //html táblázat törzsének lekérése azonosító alapján
+    addNewRow(newObj,htmlTBody) //object adatainak hozzáadása a táblázathoz, sor(ok)ként függvény segítségével
+    htmlForm.reset() //form bemenetit kiürítjük
+    }
+})
+
+jsForm.addEventListener('submit',function(e) //eventlistener hozzáadása a jsformhoz a submit eseményre
+{
+        e.preventDefault() // az oldal alapértelmezett működését preventeli
+    /**
+     * @type {HTMLFormElement} eventlistener targetje
+     */
+    const target = e.target //eventlistener targetjét betesszük változóba
+    /**
+     * @type {HTMLInputElement} bemenet
+     */
+    const mufajInput = target.querySelector('#elso') //első bemenet lekérése azonosító alapján
+        /**
+     * @type {HTMLInputElement} bemenet
+     */
+    const elsoSzerzoInput = target.querySelector('#masodik') //második bemenet lekérése azonosító alapján
+        /**
+     * @type {HTMLInputElement} bemenet
+     */
+    const elsoMuInput = target.querySelector('#harmadik') //harmadik bemenet lekérése azonosító alapján
+        /**
+     * @type {HTMLInputElement} bemenet
+     */
+    const masMuInput = target.querySelector('#negyedik') //ötödik bemenet lekérése azonosító alapján
+
+    if(validateFields(mufajInput,elsoSzerzoInput,elsoMuInput,jsForm)) //megnézzük hogy bármelyik szükséges bemenet üres-e függvény segítségével
+    {
+    /**
+    *  @type {string} műfaj értéke
+    */
+    const mufajValue = mufajInput.value //első bemenet értéke
+    /**
+    *  @type {string} szerző értéke
+    */
+    const elsoSzerzoValue = elsoSzerzoInput.value //második bemenet értéke
+    /**
+    *  @type {string} első mű értéke
+    */
+    const elsoMuValue = elsoMuInput.value //harmadik bemenet értéke
+    /**
+    *  @type {string} második mű értéke
+    */
+    const masMuValue = masMuInput.value //negyedik bemenet értéke
+
+    /**
+     * @type {Author} új object
+     */
+    const newObj = {} //üres object deklarálása
+    newObj.genre = mufajValue //object műfaj értékének megadása
+    newObj.author = elsoSzerzoValue //object szerző értékének megadása
+    newObj.firstcreation = elsoMuValue //object első mű értékének megadása
+    newObj.secCreation = masMuValue //object második mű értékének megadása
+
+    /**
+     * @type {HTMLTableSectionElement} js táblázat
+     */
+    const jsTbody = document.querySelector('#jstbody') //js törzsének lekérése azonosító alapján
+    dataArray.push(newObj) //új objectet hozzáadjuk az adattömbhöz
+    renderTable(dataArray,jsTbody) //rendereljük újra a táblázatot a felfrissült tömbbel
+    jsForm.reset() //form bemenetit kiürítjük
+    }
+})
 

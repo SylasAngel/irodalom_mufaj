@@ -1,5 +1,5 @@
 /**
- * @typedef {{genre:string,author:string,firstcreation:string,secCreation?:string}} Author az adattömb adatainak típusa
+ * @typedef {{genre:string,author:string,firstcreation:string,secAuthor?:string,secCreation?:string}} Author az adattömb adatainak típusa
  */
 
 /**
@@ -159,4 +159,98 @@ function renderForm(array,sectionAppendTo) //függvény definiálás
     const button = document.createElement('button') //gomb létrehozása
     sectionAppendTo.appendChild(button) //fűzés a mező divjéhez
     button.innerText= 'Submit' //belső szöveg megadása
+}
+
+/**
+ * Hozzáad egy új sort a táblázat törzshöz
+ * @param {Author} dataObj  object aminek az adatait hozzáadjuk a táblázathoz
+ * @param {HTMLTableSectionElement} tbody táblázat törzs amihez hozzáadjuk az új sor(oka)t
+ * @returns {void} nem returnol semmivel
+ */
+function addNewRow(dataObj,tbody) //függvény definiálás
+{
+    /**
+     * @type {HTMLTableRowElement} sor
+     */
+    const tableRow = document.createElement('tr') //sor elem létrehozása
+    tbody.appendChild(tableRow) //törzshöz hozzáfűzés
+    /**
+     * @type {HTMLTableCellElement} cella
+     */
+    const tabDetail = createCell('td',dataObj.genre,tableRow) //cella létrehozása,tárolása
+    createCell('td',dataObj.author,tableRow) //cella létrehozása
+    createCell('td',dataObj.firstcreation,tableRow) //cella létrehozása
+    if(dataObj.secAuthor && dataObj.secCreation) //második szerző és második mű elemek vizsgálata hogy üresek-e
+    {
+        /**
+         * @type {HTMLTableRowElement} táblázat sor
+         */
+        const secTableRow = document.createElement('tr') //sor létrehozása
+        tbody.appendChild(secTableRow) //fűzés a törzshöz
+        createCell('td',dataObj.secAuthor,secTableRow) //cella létrehozása
+        createCell('td',dataObj.secCreation,secTableRow) //cella létrehozása
+        tabDetail.rowSpan = 2 //sorszélesség átállítása 2-re
+    }
+
+}
+
+/**
+ * megnézi hogy a mező bemenete üres-e és ha igen akkor egy error üzenetet beír az error divbe
+ * @param {HTMLInputElement} input bemenet
+ * @param {string} text error üzenete
+ * @returns {boolean} returnol a validdal
+ */
+function validateField(input,text) //függvény definiálás
+{
+    /**
+     * @type {boolean} igaz/hamis boolean érték
+     */
+    let valid = true //bool változó deklarálás
+    if(input.value == '') //megnézzük hogy a bemenet értéke üres-e
+    {
+        /**
+         * @type {HTMLDivElement} div section
+         */
+        const inputParent = input.parentElement //megkapjuk a bemenet szülő elemét ami egy div
+        /**
+         * @type {HTMLDivElement} div section
+         */
+        const error = inputParent.querySelector('.error') //error div lekérése id alapján
+        error.innerText = text //belső szöveg megadása
+        valid = false //valid értékét átállítjuk false-ra
+    }
+    return valid //visszatér a validdal
+}
+
+/**
+ * függvény ami validálja az összes szükséges mezőt
+ * @param {HTMLInputElement} FirInput első bemenet
+ * @param {HTMLInputElement} secInput második bemenet
+ * @param {HTMLInputElement} thirInput harmadik bemenet
+ * @param {HTMLFormElement} form form aminek megkeressük az összes error divjét
+ * @returns {boolean} visszatér a validdal
+ */
+function validateFields(FirInput,secInput,thirInput,form) // függvény definiálás
+{
+    /**
+     * @type {NodeList} error divek listája
+     */
+    const errorList = form.querySelectorAll('.error') //összes error div listába tétele
+    for(const e of errorList){ //végigiterálunk az errodListen
+        e.innerText = '' //átállítjuk a belső szövegüket üresre
+    }
+    /**
+     * @type {boolean} valid 
+     */
+    let valid = true //valid deklarálás
+    if(!validateField(FirInput,'Műfaj mező kitöltése kötelező')){ //első bemenet validálása függvénnyel
+        valid = false //valid érték átállítása false-ra
+    }
+    if(!validateField(secInput,'Első szerző mező kitöltése kötelező')){ //második bemenet validálása függvénnyel
+        valid = false //valid érték átállítása false-ra
+    }
+    if(!validateField(thirInput,'Első mű mező kitöltése kötelező')){ //harmadik bemenet validálása függvénnyel
+        valid = false //valid érték átállítása false-ra
+    }
+    return valid //visszatér a validdal
 }

@@ -1,0 +1,16 @@
+{
+  "rowtablebody": "htmltbody",
+  "coltablebody": "jstbody",
+  "colform": "jsform",
+  "rowform": "htmlform",
+  "html_section_id": "htmlsection",
+  "js_section_id": "jssection",
+  "default_visible": "jssection",
+  "has_checkbox": false,
+  "checkbox_id": null,
+  "checkbox_default": null,
+  "has_dropdown": true,
+  "dropdown_id": "tableselector",
+  "default_selected": "jssection",
+  "default_empty": false
+}
